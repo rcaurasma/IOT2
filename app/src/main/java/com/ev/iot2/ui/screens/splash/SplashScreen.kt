@@ -84,7 +84,7 @@ fun SplashScreen(
                 // Fallback to static icon if Lottie not available
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "iotempaLogo",
+                    contentDescription = "iotempaasLogo",
                     modifier = Modifier.size(150.dp)
                 )
             }
