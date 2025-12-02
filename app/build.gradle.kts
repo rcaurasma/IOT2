@@ -6,23 +6,28 @@ plugins {
 
 android {
     namespace = "com.ev.iot2"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.ev.iot2"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Configurable API URL - ngrok generates different URLs each time
+        // For production, replace with a stable API URL or use build variants
+        // This default URL is for development/demo purposes only
+        buildConfigField("String", "API_BASE_URL", "\"https://heavies-yair-unrented.ngrok-free.dev\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            // For production, override API_BASE_URL with a stable URL:
+            // buildConfigField("String", "API_BASE_URL", "\"https://your-production-api.com\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -50,6 +56,26 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    
+    // Lottie for animations
+    implementation(libs.lottie.compose)
+    
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    
+    // Material Icons Extended
+    implementation(libs.androidx.compose.material.icons.extended)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
