@@ -49,7 +49,6 @@ fun RecoveryEmailScreen(
     var email by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(true) }
-    var generatedCode by remember { mutableStateOf("") }
     
     fun validateAndSendCode() {
         when {
@@ -69,7 +68,6 @@ fun RecoveryEmailScreen(
                 } else {
                     // Generate and store recovery code
                     val code = Validators.generateRecoveryCode()
-                    generatedCode = code
                     databaseHelper.insertRecoveryCode(email, code)
                     
                     // In a real app, this would send an email

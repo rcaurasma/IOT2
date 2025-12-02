@@ -2,13 +2,10 @@ package com.ev.iot2.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary colors - Red accent theme
+// Primary colors - Blue accent theme
 val PrimaryBlue = Color(0xFF1976D2)
 val PrimaryBlueDark = Color(0xFF0D47A1)
 val PrimaryBlueLight = Color(0xFF42A5F5)
-
-
-
 
 // Background colors - White theme
 val BackgroundWhite = Color(0xFFFFFFFF)
