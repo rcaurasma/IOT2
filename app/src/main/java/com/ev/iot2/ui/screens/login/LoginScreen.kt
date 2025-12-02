@@ -39,10 +39,12 @@ import com.ev.iot2.ui.components.MessageText
 import com.ev.iot2.ui.theme.PrimaryRed
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
+import androidx.compose.ui.tooling.preview.Preview
+import com.ev.iot2.ui.theme.IOT2Theme
 
 @Composable
 fun LoginScreen(
-    databaseHelper: DatabaseHelper,
+    databaseHelper: DatabaseHelper?,
     onNavigateToRegister: () -> Unit,
     onNavigateToRecovery: () -> Unit,
     onLoginSuccess: () -> Unit
@@ -75,15 +77,20 @@ fun LoginScreen(
                     isError = true
                 }
                 else -> {
-                    // Try local database login
-                    val user = databaseHelper.validateLogin(email, password)
-                    if (user != null) {
-                        message = "¡Login correcto!"
+                    if (databaseHelper == null) {
+                        message = "Login no disponible en vista previa."
                         isError = false
-                        onLoginSuccess()
                     } else {
-                        message = "Credenciales incorrectas"
-                        isError = true
+                        // Try local database login
+                        val user = databaseHelper.validateLogin(email, password)
+                        if (user != null) {
+                            message = "¡Login correcto!"
+                            isError = false
+                            onLoginSuccess()
+                        } else {
+                            message = "Credenciales incorrectas"
+                            isError = true
+                        }
                     }
                 }
             }
@@ -171,5 +178,18 @@ fun LoginScreen(
                 onClick = onNavigateToRecovery
             )
         }
+    }
+}
+
+@Preview(showBackground = true, name = "Login Screen Preview")
+@Composable
+fun LoginScreenPreview() {
+    IOT2Theme {
+        LoginScreen(
+            databaseHelper = null,
+            onNavigateToRegister = {},
+            onNavigateToRecovery = {},
+            onLoginSuccess = {}
+        )
     }
 }
