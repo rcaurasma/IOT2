@@ -102,8 +102,8 @@ fun LoginScreen(
     ) {
         // Logo
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = "iotemp Logo",
+            painter = painterResource(id = R.drawable.rf_solutions),
+            contentDescription = "RF Solutions",
             modifier = Modifier.size(120.dp)
         )
         
