@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.ev.iot2.data.model.User
+import com.ev.iot2.utils.Constants
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -225,12 +226,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun validateRecoveryCode(email: String, code: String): Boolean {
         val db = readableDatabase
-        val oneMinuteAgo = System.currentTimeMillis() - 60000 // 1 minute validity
+        val validityThreshold = System.currentTimeMillis() - Constants.RECOVERY_CODE_VALIDITY_MS
         val cursor = db.query(
             TABLE_RECOVERY_CODES,
             null,
             "$COLUMN_EMAIL = ? AND $COLUMN_CODE = ? AND $COLUMN_USED = 0 AND $COLUMN_CREATED_AT > ?",
-            arrayOf(email.lowercase(), code, oneMinuteAgo.toString()),
+            arrayOf(email.lowercase(), code, validityThreshold.toString()),
             null, null, null
         )
         return cursor.use { it.count > 0 }
