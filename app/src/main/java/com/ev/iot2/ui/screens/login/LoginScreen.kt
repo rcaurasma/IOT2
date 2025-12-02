@@ -36,7 +36,7 @@ import com.ev.iot2.ui.components.IoTempPasswordField
 import com.ev.iot2.ui.components.IoTempTextField
 import com.ev.iot2.ui.components.IoTempTextButton
 import com.ev.iot2.ui.components.MessageText
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,10 +116,10 @@ fun LoginScreen(
         
         // App name
         Text(
-            text = "iotemp",
+            text = "Iniciar Sesión",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = PrimaryRed
+            color = PrimaryBlue
         )
         
         Spacer(modifier = Modifier.height(32.dp))
