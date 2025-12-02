@@ -4,15 +4,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.ev.iot2.data.model.RecoveryCode
 import com.ev.iot2.data.model.User
 import java.security.MessageDigest
+import java.security.SecureRandom
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "iotemp.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         // Users table
         private const val TABLE_USERS = "users"
@@ -20,12 +20,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_NAME = "name"
         private const val COLUMN_EMAIL = "email"
         private const val COLUMN_PASSWORD_HASH = "password_hash"
+        private const val COLUMN_SALT = "salt"
         private const val COLUMN_CREATED_AT = "created_at"
 
         // Recovery codes table
         private const val TABLE_RECOVERY_CODES = "recovery_codes"
         private const val COLUMN_CODE = "code"
         private const val COLUMN_USED = "used"
+        
+        private const val SALT_LENGTH = 16
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -35,6 +38,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 $COLUMN_NAME TEXT NOT NULL,
                 $COLUMN_EMAIL TEXT UNIQUE NOT NULL,
                 $COLUMN_PASSWORD_HASH TEXT NOT NULL,
+                $COLUMN_SALT TEXT NOT NULL,
                 $COLUMN_CREATED_AT INTEGER NOT NULL
             )
         """.trimIndent()
@@ -58,21 +62,32 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL("DROP TABLE IF EXISTS $TABLE_RECOVERY_CODES")
         onCreate(db)
     }
+    
+    // Generate a random salt
+    private fun generateSalt(): String {
+        val random = SecureRandom()
+        val salt = ByteArray(SALT_LENGTH)
+        random.nextBytes(salt)
+        return salt.joinToString("") { "%02x".format(it) }
+    }
 
-    // Hash password using SHA-256
-    fun hashPassword(password: String): String {
+    // Hash password using SHA-256 with salt for better security
+    private fun hashPassword(password: String, salt: String): String {
         val digest = MessageDigest.getInstance("SHA-256")
-        val hashBytes = digest.digest(password.toByteArray())
+        val saltedPassword = salt + password
+        val hashBytes = digest.digest(saltedPassword.toByteArray())
         return hashBytes.joinToString("") { "%02x".format(it) }
     }
 
     // User CRUD operations
     fun insertUser(name: String, email: String, password: String): Long {
         val db = writableDatabase
+        val salt = generateSalt()
         val values = ContentValues().apply {
             put(COLUMN_NAME, name)
             put(COLUMN_EMAIL, email.lowercase())
-            put(COLUMN_PASSWORD_HASH, hashPassword(password))
+            put(COLUMN_PASSWORD_HASH, hashPassword(password, salt))
+            put(COLUMN_SALT, salt)
             put(COLUMN_CREATED_AT, System.currentTimeMillis())
         }
         return db.insert(TABLE_USERS, null, values)
@@ -94,6 +109,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     name = it.getString(it.getColumnIndexOrThrow(COLUMN_NAME)),
                     email = it.getString(it.getColumnIndexOrThrow(COLUMN_EMAIL)),
                     passwordHash = it.getString(it.getColumnIndexOrThrow(COLUMN_PASSWORD_HASH)),
+                    salt = it.getString(it.getColumnIndexOrThrow(COLUMN_SALT)),
                     createdAt = it.getLong(it.getColumnIndexOrThrow(COLUMN_CREATED_AT))
                 )
             } else null
@@ -116,6 +132,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     name = it.getString(it.getColumnIndexOrThrow(COLUMN_NAME)),
                     email = it.getString(it.getColumnIndexOrThrow(COLUMN_EMAIL)),
                     passwordHash = it.getString(it.getColumnIndexOrThrow(COLUMN_PASSWORD_HASH)),
+                    salt = it.getString(it.getColumnIndexOrThrow(COLUMN_SALT)),
                     createdAt = it.getLong(it.getColumnIndexOrThrow(COLUMN_CREATED_AT))
                 )
             } else null
@@ -134,6 +151,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                         name = it.getString(it.getColumnIndexOrThrow(COLUMN_NAME)),
                         email = it.getString(it.getColumnIndexOrThrow(COLUMN_EMAIL)),
                         passwordHash = it.getString(it.getColumnIndexOrThrow(COLUMN_PASSWORD_HASH)),
+                        salt = it.getString(it.getColumnIndexOrThrow(COLUMN_SALT)),
                         createdAt = it.getLong(it.getColumnIndexOrThrow(COLUMN_CREATED_AT))
                     )
                 )
@@ -153,8 +171,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun updateUserPassword(email: String, newPassword: String): Int {
         val db = writableDatabase
+        val salt = generateSalt()
         val values = ContentValues().apply {
-            put(COLUMN_PASSWORD_HASH, hashPassword(newPassword))
+            put(COLUMN_PASSWORD_HASH, hashPassword(newPassword, salt))
+            put(COLUMN_SALT, salt)
         }
         return db.update(TABLE_USERS, values, "$COLUMN_EMAIL = ?", arrayOf(email.lowercase()))
     }
@@ -182,7 +202,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun validateLogin(email: String, password: String): User? {
         val user = getUserByEmail(email) ?: return null
-        return if (user.passwordHash == hashPassword(password)) user else null
+        return if (user.passwordHash == hashPassword(password, user.salt)) user else null
     }
 
     // Recovery code operations

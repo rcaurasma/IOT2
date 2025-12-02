@@ -5,6 +5,7 @@ data class User(
     val name: String,
     val email: String,
     val passwordHash: String,
+    val salt: String = "",
     val createdAt: Long = System.currentTimeMillis()
 )
 

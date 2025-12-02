@@ -17,13 +17,17 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // Configurable API URL
+        // Configurable API URL - ngrok generates different URLs each time
+        // For production, replace with a stable API URL or use build variants
+        // This default URL is for development/demo purposes only
         buildConfigField("String", "API_BASE_URL", "\"https://heavies-yair-unrented.ngrok-free.dev\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            // For production, override API_BASE_URL with a stable URL:
+            // buildConfigField("String", "API_BASE_URL", "\"https://your-production-api.com\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

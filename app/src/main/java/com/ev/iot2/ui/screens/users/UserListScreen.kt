@@ -101,7 +101,9 @@ fun UserListScreen(
             text = { Text("¿Está seguro de que desea eliminar a ${userToDelete?.name}?") },
             confirmButton = {
                 TextButton(
-                    onClick = { deleteUser(userToDelete!!) }
+                    onClick = { 
+                        userToDelete?.let { user -> deleteUser(user) }
+                    }
                 ) {
                     Text("Sí", color = ErrorRed)
                 }

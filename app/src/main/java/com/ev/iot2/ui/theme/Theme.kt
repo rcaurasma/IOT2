@@ -1,7 +1,6 @@
 package com.ev.iot2.ui.theme
 
 import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ private val IoTempColorScheme = lightColorScheme(
 
 @Composable
 fun IOT2Theme(
-    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = IoTempColorScheme
