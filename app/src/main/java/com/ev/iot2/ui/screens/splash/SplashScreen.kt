@@ -92,7 +92,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             Text(
-                text = "iotemp",
+                text = "Cargando...",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryBlue

@@ -72,7 +72,7 @@ fun MainMenuScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("iotemp") },
+                title = { Text("Bienvenido a RF Soluciones") },
                 actions = {
                     IconButton(onClick = onLogout) {
                         Icon(

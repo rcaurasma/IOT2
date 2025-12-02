@@ -97,7 +97,7 @@ fun DeveloperScreen(
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = "iotemp - Control de Temperatura IoT",
+                text = "Control de Temperatura",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
