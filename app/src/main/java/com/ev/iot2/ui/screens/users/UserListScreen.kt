@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.ev.iot2.data.database.DatabaseHelper
 import com.ev.iot2.data.model.User
 import com.ev.iot2.ui.theme.ErrorRed
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +134,7 @@ fun UserListScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -159,9 +159,9 @@ fun UserListScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PrimaryRed,
-                    cursorColor = PrimaryRed,
-                    focusedLabelColor = PrimaryRed
+                    focusedBorderColor = PrimaryBlue,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -237,7 +237,7 @@ fun UserCard(
                 Icon(
                     Icons.Default.Edit,
                     contentDescription = "Editar",
-                    tint = PrimaryRed
+                    tint = PrimaryBlue
                 )
             }
             

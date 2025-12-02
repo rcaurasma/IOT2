@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ev.iot2.data.model.Developer
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +71,7 @@ fun DeveloperScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -91,7 +91,7 @@ fun DeveloperScreen(
                 text = "Equipo de Desarrollo",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = PrimaryRed
+                color = PrimaryBlue
             )
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -147,12 +147,12 @@ fun DeveloperCard(
             Surface(
                 modifier = Modifier.size(80.dp),
                 shape = CircleShape,
-                color = PrimaryRed.copy(alpha = 0.1f)
+                color = PrimaryBlue.copy(alpha = 0.1f)
             ) {
                 Icon(
                     Icons.Default.Person,
                     contentDescription = "Avatar",
-                    tint = PrimaryRed,
+                    tint = PrimaryBlue,
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -169,7 +169,7 @@ fun DeveloperCard(
             
             // Role badge
             Surface(
-                color = PrimaryRed,
+                color = PrimaryBlue,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(

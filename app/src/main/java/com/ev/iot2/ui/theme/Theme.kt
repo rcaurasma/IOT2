@@ -10,15 +10,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val IoTempColorScheme = lightColorScheme(
-    primary = PrimaryRed,
+    primary = PrimaryBlue,
     onPrimary = OnPrimaryWhite,
-    primaryContainer = PrimaryRedLight,
+    primaryContainer = PrimaryBlueLight,
     onPrimaryContainer = OnBackgroundBlack,
-    secondary = PrimaryRedDark,
+    secondary = PrimaryBlueDark,
     onSecondary = OnPrimaryWhite,
-    secondaryContainer = PrimaryRedLight,
+    secondaryContainer = PrimaryBlueLight,
     onSecondaryContainer = OnBackgroundBlack,
-    tertiary = PrimaryRed,
+    tertiary = PrimaryBlue,
     onTertiary = OnPrimaryWhite,
     background = BackgroundWhite,
     onBackground = OnBackgroundBlack,
@@ -40,7 +40,7 @@ fun IOT2Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = PrimaryRed.toArgb()
+            window.statusBarColor = PrimaryBlue.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }

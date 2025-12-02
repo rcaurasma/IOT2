@@ -57,7 +57,7 @@ import androidx.core.content.ContextCompat
 import com.ev.iot2.R
 import com.ev.iot2.ui.theme.ErrorRed
 import com.ev.iot2.ui.theme.InfoBlue
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.ui.theme.SuccessGreen
 import com.ev.iot2.ui.theme.WarningOrange
 import com.ev.iot2.utils.Constants
@@ -157,7 +157,7 @@ fun SensorsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -323,7 +323,7 @@ fun DeviceControlCard(
             .fillMaxWidth()
             .clickable { onToggle() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isOn) PrimaryRed.copy(alpha = 0.1f) else Color.White
+            containerColor = if (isOn) PrimaryBlue.copy(alpha = 0.1f) else Color.White
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)

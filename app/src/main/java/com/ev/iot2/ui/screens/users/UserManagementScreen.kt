@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +56,7 @@ fun UserManagementScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -124,7 +124,7 @@ fun UserManagementCard(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = PrimaryRed,
+                tint = PrimaryBlue,
                 modifier = Modifier.size(48.dp)
             )
             

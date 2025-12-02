@@ -39,7 +39,7 @@ import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
 import com.ev.iot2.ui.components.IoTempTextField
 import com.ev.iot2.ui.components.MessageText
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
 
@@ -160,7 +160,7 @@ fun UserFormScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -183,7 +183,7 @@ fun UserFormScreen(
                 text = if (isEditMode) "Modificar datos del usuario" else "Datos del nuevo usuario",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = PrimaryRed
+                color = PrimaryBlue
             )
             
             Spacer(modifier = Modifier.height(32.dp))

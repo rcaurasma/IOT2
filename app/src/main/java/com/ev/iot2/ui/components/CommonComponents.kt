@@ -33,7 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import com.ev.iot2.ui.theme.ErrorRed
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.ui.theme.SuccessGreen
 
 @Composable
@@ -63,10 +63,10 @@ fun IoTempTextField(
             onNext = { onImeAction() }
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryRed,
+            focusedBorderColor = PrimaryBlue,
             unfocusedBorderColor = Color.Gray,
-            cursorColor = PrimaryRed,
-            focusedLabelColor = PrimaryRed
+            cursorColor = PrimaryBlue,
+            focusedLabelColor = PrimaryBlue
         ),
         shape = RoundedCornerShape(8.dp)
     )
@@ -109,10 +109,10 @@ fun IoTempPasswordField(
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryRed,
+            focusedBorderColor = PrimaryBlue,
             unfocusedBorderColor = Color.Gray,
-            cursorColor = PrimaryRed,
-            focusedLabelColor = PrimaryRed
+            cursorColor = PrimaryBlue,
+            focusedLabelColor = PrimaryBlue
         ),
         shape = RoundedCornerShape(8.dp)
     )
@@ -132,7 +132,7 @@ fun IoTempButton(
             .height(50.dp),
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryRed,
+            containerColor = PrimaryBlue,
             contentColor = Color.White,
             disabledContainerColor = Color.Gray,
             disabledContentColor = Color.White
@@ -159,7 +159,7 @@ fun IoTempTextButton(
     ) {
         Text(
             text = text,
-            color = PrimaryRed,
+            color = PrimaryBlue,
             fontSize = 14.sp
         )
     }

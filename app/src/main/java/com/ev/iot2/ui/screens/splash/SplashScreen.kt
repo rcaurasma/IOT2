@@ -32,7 +32,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ev.iot2.R
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Constants
 import kotlinx.coroutines.delay
 
@@ -95,7 +95,7 @@ fun SplashScreen(
                 text = "iotemp",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
-                color = PrimaryRed
+                color = PrimaryBlue
             )
             
             Spacer(modifier = Modifier.height(8.dp))

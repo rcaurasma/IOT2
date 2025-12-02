@@ -36,7 +36,7 @@ import com.ev.iot2.data.database.DatabaseHelper
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempTextField
 import com.ev.iot2.ui.components.MessageText
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +95,7 @@ fun RecoveryEmailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -118,7 +118,7 @@ fun RecoveryEmailScreen(
                 text = "Ingresa tu email",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = PrimaryRed
+                color = PrimaryBlue
             )
             
             Spacer(modifier = Modifier.height(16.dp))

@@ -43,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.ui.theme.PrimaryRed
+import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Constants
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -83,7 +83,7 @@ fun MainMenuScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryRed,
+                    containerColor = PrimaryBlue,
                     titleContentColor = Color.White
                 )
             )
@@ -101,7 +101,7 @@ fun MainMenuScreen(
             // Date and Time display
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = PrimaryRed.copy(alpha = 0.1f)),
+                colors = CardDefaults.cardColors(containerColor = PrimaryBlue.copy(alpha = 0.1f)),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -120,7 +120,7 @@ fun MainMenuScreen(
                         text = currentDateTime,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = PrimaryRed
+                        color = PrimaryBlue
                     )
                 }
             }
@@ -189,7 +189,7 @@ fun MenuCard(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = PrimaryRed,
+                tint = PrimaryBlue,
                 modifier = Modifier.size(48.dp)
             )
             
