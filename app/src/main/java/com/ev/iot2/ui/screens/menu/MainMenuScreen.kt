@@ -56,6 +56,7 @@ fun MainMenuScreen(
     onNavigateToUserManagement: () -> Unit,
     onNavigateToSensors: () -> Unit,
     onNavigateToDeveloper: () -> Unit,
+    onNavigateToArduino: () -> Unit,
     onLogout: () -> Unit
 ) {
     var currentDateTime by remember { mutableStateOf("") }
@@ -152,9 +153,18 @@ fun MainMenuScreen(
                 icon = Icons.Default.Sensors,
                 onClick = onNavigateToSensors
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
             
+            MenuCard(
+                title = "Gestión de acceso",
+                description = "sistema de control de acceso basado en tecnología RFID y componentes IoT",
+                icon = Icons.Default.Code,
+                onClick = onNavigateToArduino
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            )
+
             MenuCard(
                 title = "Datos del desarrollador",
                 description = "Información del equipo de desarrollo",
