@@ -32,7 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+// Code validation now performed client-side comparing with generated code from server
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempTextField
 import com.ev.iot2.ui.components.MessageText
@@ -43,7 +43,7 @@ import com.ev.iot2.utils.Validators
 @Composable
 fun RecoveryCodeScreen(
     email: String,
-    databaseHelper: DatabaseHelper,
+    generatedCode: String,
     onNavigateBack: () -> Unit,
     onCodeValid: () -> Unit
 ) {
@@ -62,10 +62,9 @@ fun RecoveryCodeScreen(
                 isError = true
             }
             else -> {
-                if (databaseHelper.validateRecoveryCode(email, code)) {
+                if (code == generatedCode && code.isNotBlank()) {
                     message = "Código válido"
                     isError = false
-                    databaseHelper.markRecoveryCodeAsUsed(email, code)
                     onCodeValid()
                 } else {
                     message = "Código incorrecto o vencido"

@@ -27,7 +27,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+import com.ev.iot2.network.ApiClient
+import com.ev.iot2.network.ResetPasswordRequest
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
 import com.ev.iot2.ui.components.MessageText
@@ -38,7 +39,7 @@ import com.ev.iot2.utils.Validators
 @Composable
 fun RecoveryNewPasswordScreen(
     email: String,
-    databaseHelper: DatabaseHelper,
+    code: String,
     onPasswordChanged: () -> Unit
 ) {
     var newPassword by remember { mutableStateOf("") }
@@ -61,13 +62,18 @@ fun RecoveryNewPasswordScreen(
                     message = "Las contraseñas no coinciden"
                     isError = true
                 } else {
-                    val result = databaseHelper.updateUserPassword(email, newPassword)
-                    if (result > 0) {
-                        message = "¡Contraseña cambiada exitosamente!"
-                        isError = false
-                        onPasswordChanged()
-                    } else {
-                        message = "Error al cambiar la contraseña"
+                    try {
+                        val resp = ApiClient.authService.resetPassword(ResetPasswordRequest(email, code, newPassword))
+                        if (resp.isSuccessful) {
+                            message = resp.body()?.get("message") ?: "Contraseña actualizada correctamente"
+                            isError = false
+                            onPasswordChanged()
+                        } else {
+                            message = resp.errorBody()?.string() ?: "Error al cambiar la contraseña"
+                            isError = true
+                        }
+                    } catch (e: Exception) {
+                        message = "Error de red: ${e.message}"
                         isError = true
                     }
                 }

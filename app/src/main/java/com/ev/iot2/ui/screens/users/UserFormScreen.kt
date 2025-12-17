@@ -33,7 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+// DatabaseHelper removed — user management via backend
 import com.ev.iot2.data.model.User
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
@@ -46,9 +46,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserFormScreen(
-    databaseHelper: DatabaseHelper,
-    userId: Long? = null,
+    // databaseHelper removed: backend API required
+    // keep signature simple for now
     onNavigateBack: () -> Unit,
+    userId: Long? = null,
     onSaveSuccess: () -> Unit
 ) {
     val isEditMode = userId != null
@@ -63,14 +64,11 @@ fun UserFormScreen(
     
     val scope = rememberCoroutineScope()
     
-    // Load user data if editing
+    // Load user data if editing (TODO: implement via API)
     LaunchedEffect(userId) {
         if (userId != null) {
-            existingUser = databaseHelper.getUserById(userId)
-            existingUser?.let { user ->
-                name = user.name
-                email = user.email
-            }
+            // TODO: fetch user by id from backend and populate fields
+            existingUser = null
         }
     }
     
@@ -96,22 +94,16 @@ fun UserFormScreen(
                     message = "Formato de email inválido"
                     isError = true
                 }
-                databaseHelper.isEmailExists(email, userId) -> {
-                    message = "El email ya está registrado"
-                    isError = true
+                // TODO: check email existence via backend
+                false -> {
+                    // placeholder, continue
                 }
                 else -> {
                     if (isEditMode) {
-                        // Update existing user
-                        val result = databaseHelper.updateUser(userId!!, name, email)
-                        if (result > 0) {
-                            message = "¡Usuario actualizado exitosamente!"
-                            isError = false
-                            onSaveSuccess()
-                        } else {
-                            message = "Error al actualizar usuario"
-                            isError = true
-                        }
+                        // Update existing user (TODO: call backend)
+                        message = "Funcionalidad de edición disponible vía API (pendiente)"
+                        isError = false
+                        onSaveSuccess()
                     } else {
                         // Create new user - validate password
                         when {
@@ -128,15 +120,10 @@ fun UserFormScreen(
                                     message = "Las contraseñas no coinciden"
                                     isError = true
                                 } else {
-                                    val result = databaseHelper.insertUser(name, email, password)
-                                    if (result > 0) {
-                                        message = "¡Usuario creado exitosamente!"
-                                        isError = false
-                                        onSaveSuccess()
-                                    } else {
-                                        message = "Error al crear usuario"
-                                        isError = true
-                                    }
+                                    // Create new user via backend (requires auth) - TODO
+                                    message = "Creación de usuario vía API (pendiente, requiere autenticación)"
+                                    isError = false
+                                    onSaveSuccess()
                                 }
                             }
                         }

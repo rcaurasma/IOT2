@@ -32,7 +32,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+import com.ev.iot2.network.ApiClient
+import com.ev.iot2.network.RegisterRequest
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
 import com.ev.iot2.ui.components.IoTempTextField
@@ -44,11 +45,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    databaseHelper: DatabaseHelper,
     onNavigateBack: () -> Unit,
     onRegisterSuccess: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -88,17 +89,20 @@ fun RegisterScreen(
                     } else if (!Validators.passwordsMatch(password, confirmPassword)) {
                         message = "Las contraseñas no coinciden"
                         isError = true
-                    } else if (databaseHelper.isEmailExists(email)) {
-                        message = "El email ya está registrado"
-                        isError = true
                     } else {
-                        val result = databaseHelper.insertUser(name, email, password)
-                        if (result > 0) {
-                            message = "¡Registro exitoso!"
-                            isError = false
-                            onRegisterSuccess()
-                        } else {
-                            message = "Error al registrar usuario"
+                        // Call API register
+                        try {
+                            val resp = ApiClient.authService.register(RegisterRequest(name, lastName, email, password))
+                            if (resp.isSuccessful) {
+                                message = resp.body()?.message ?: "¡Registro exitoso!"
+                                isError = false
+                                onRegisterSuccess()
+                            } else {
+                                message = resp.errorBody()?.string() ?: "Error al registrar usuario"
+                                isError = true
+                            }
+                        } catch (e: Exception) {
+                            message = "Error de red: ${e.message}"
                             isError = true
                         }
                     }
@@ -154,6 +158,15 @@ fun RegisterScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = "Nombre",
+                imeAction = ImeAction.Next
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Last name field
+            IoTempTextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                label = "Apellido",
                 imeAction = ImeAction.Next
             )
             

@@ -30,7 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ev.iot2.R
-import com.ev.iot2.data.database.DatabaseHelper
+import com.ev.iot2.network.ApiClient
+import com.ev.iot2.network.LoginRequest
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
 import com.ev.iot2.ui.components.IoTempTextField
@@ -44,10 +45,9 @@ import com.ev.iot2.ui.theme.IOT2Theme
 
 @Composable
 fun LoginScreen(
-    databaseHelper: DatabaseHelper?,
     onNavigateToRegister: () -> Unit,
     onNavigateToRecovery: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (String?) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -77,20 +77,25 @@ fun LoginScreen(
                     isError = true
                 }
                 else -> {
-                    if (databaseHelper == null) {
-                        message = "Login no disponible en vista previa."
-                        isError = false
-                    } else {
-                        // Try local database login
-                        val user = databaseHelper.validateLogin(email, password)
-                        if (user != null) {
-                            message = "¡Login correcto!"
-                            isError = false
-                            onLoginSuccess()
+                    try {
+                        val resp = ApiClient.authService.login(LoginRequest(email, password))
+                        if (resp.isSuccessful) {
+                            val body = resp.body()
+                            if (body != null && body.success && body.token != null) {
+                                message = "¡Login correcto!"
+                                isError = false
+                                onLoginSuccess(body.token)
+                            } else {
+                                message = "Credenciales incorrectas"
+                                isError = true
+                            }
                         } else {
-                            message = "Credenciales incorrectas"
+                            message = resp.errorBody()?.string() ?: "Error en login"
                             isError = true
                         }
+                    } catch (e: Exception) {
+                        message = "Error de red: ${e.message}"
+                        isError = true
                     }
                 }
             }
@@ -186,7 +191,6 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     IOT2Theme {
         LoginScreen(
-            databaseHelper = null,
             onNavigateToRegister = {},
             onNavigateToRecovery = {},
             onLoginSuccess = {}

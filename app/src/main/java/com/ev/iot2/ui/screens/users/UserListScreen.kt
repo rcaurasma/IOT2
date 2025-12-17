@@ -46,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+ // DatabaseHelper removed — list managed via backend
 import com.ev.iot2.data.model.User
 import com.ev.iot2.ui.theme.ErrorRed
 import com.ev.iot2.ui.theme.PrimaryBlue
@@ -55,7 +55,7 @@ import com.ev.iot2.utils.Validators
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserListScreen(
-    databaseHelper: DatabaseHelper,
+    // databaseHelper removed; use API in future
     onNavigateBack: () -> Unit,
     onEditUser: (Long) -> Unit
 ) {
@@ -67,7 +67,7 @@ fun UserListScreen(
     
     // Load users
     LaunchedEffect(Unit) {
-        users = databaseHelper.getAllUsers()
+        // TODO: fetch users from backend and assign to users/filteredUsers
         filteredUsers = users
     }
     
@@ -84,8 +84,7 @@ fun UserListScreen(
     }
     
     fun deleteUser(user: User) {
-        databaseHelper.deleteUser(user.id)
-        users = databaseHelper.getAllUsers()
+        // TODO: call backend to delete user
         showDeleteDialog = false
         userToDelete = null
     }

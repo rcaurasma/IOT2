@@ -32,7 +32,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ev.iot2.data.database.DatabaseHelper
+import com.ev.iot2.network.ApiClient
+import com.ev.iot2.network.ForgotPasswordRequest
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempTextField
 import com.ev.iot2.ui.components.MessageText
@@ -42,7 +43,6 @@ import com.ev.iot2.utils.Validators
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecoveryEmailScreen(
-    databaseHelper: DatabaseHelper,
     onNavigateBack: () -> Unit,
     onCodeSent: (String) -> Unit
 ) {
@@ -62,21 +62,21 @@ fun RecoveryEmailScreen(
                 isError = true
             }
             else -> {
-                val user = databaseHelper.getUserByEmail(email)
-                if (user == null) {
-                    message = "El email no está registrado"
+                try {
+                    val resp = ApiClient.authService.forgotPassword(ForgotPasswordRequest(email))
+                    if (resp.isSuccessful) {
+                        val body = resp.body()
+                        generatedCode = body?.code ?: ""
+                        message = body?.message ?: "Código enviado (simulado)"
+                        isError = false
+                        onCodeSent(email)
+                    } else {
+                        message = resp.errorBody()?.string() ?: "Error al solicitar código"
+                        isError = true
+                    }
+                } catch (e: Exception) {
+                    message = "Error de red: ${e.message}"
                     isError = true
-                } else {
-                    // Generate and store recovery code
-                    val code = Validators.generateRecoveryCode()
-                    generatedCode = code
-                    databaseHelper.insertRecoveryCode(email, code)
-                    
-                    // In a real app, this would send an email
-                    // For demo purposes, we show the code
-                    message = "Código de recuperación enviado: $code"
-                    isError = false
-                    onCodeSent(email)
                 }
             }
         }
