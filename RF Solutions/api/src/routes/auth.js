@@ -194,7 +194,14 @@ router.post('/login', async (req, res) => {
 		return res.json({
 			success: true,
 			token,
-			user: { id: user.id, name: user.name, email: user.email }
+			user: {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				role: user.role || 'OPERATOR',
+				id_departamento: user.id_departamento || null,
+				estado: user.estado || 'ACTIVO'
+			}
 		});
 	} catch (e) {
 		console.error(e);

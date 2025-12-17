@@ -64,10 +64,10 @@ fun UserFormScreen(
     
     val scope = rememberCoroutineScope()
     
-    // Load user data if editing (TODO: implement via API)
+    // Load user data if editing (pendiente: implementar carga desde la API)
     LaunchedEffect(userId) {
         if (userId != null) {
-            // TODO: fetch user by id from backend and populate fields
+            // pendiente: obtener usuario por id desde backend y poblar campos
             existingUser = null
         }
     }
@@ -94,9 +94,9 @@ fun UserFormScreen(
                     message = "Formato de email inválido"
                     isError = true
                 }
-                // TODO: check email existence via backend
+                // pendiente: verificar existencia de email via backend
                 false -> {
-                    // placeholder, continue
+                    // placeholder, continuar
                 }
                 else -> {
                     if (isEditMode) {
@@ -120,7 +120,7 @@ fun UserFormScreen(
                                     message = "Las contraseñas no coinciden"
                                     isError = true
                                 } else {
-                                    // Create new user via backend (requires auth) - TODO
+                                    // Creación de usuario vía backend (pendiente: implementación API)
                                     message = "Creación de usuario vía API (pendiente, requiere autenticación)"
                                     isError = false
                                     onSaveSuccess()

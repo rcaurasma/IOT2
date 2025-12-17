@@ -15,7 +15,15 @@ data class ForgotPasswordResponse(val message: String, val code: String?)
 
 data class ResetPasswordRequest(val email: String, val code: String, val new_password: String)
 
-data class User(val id: Int, val name: String, val last_name: String?, val email: String)
+data class User(
+    val id: Int,
+    val name: String,
+    val last_name: String?,
+    val email: String,
+    val role: String?,
+    val id_departamento: Int?,
+    val estado: String?
+)
 
 interface AuthService {
     @POST("auth/register")

@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    // TODO: replace with your AWS public URL and port
+    // Configure the AWS API public URL and port for your deployment
     private const val BASE_URL = "http://100.49.19.148:3000/"
 
     private val logging = HttpLoggingInterceptor().apply {

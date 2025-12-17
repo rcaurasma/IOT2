@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Constants
+import com.ev.iot2.network.TokenManager
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -138,21 +139,34 @@ fun MainMenuScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             // Menu options
-            MenuCard(
-                title = "CRUD de Usuarios",
-                description = "Gestionar usuarios del sistema",
-                icon = Icons.Default.Person,
-                onClick = onNavigateToUserManagement
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            MenuCard(
-                title = "Ver datos de sensores",
-                description = "Temperatura, humedad y control de dispositivos",
-                icon = Icons.Default.Sensors,
-                onClick = onNavigateToSensors
-            )
+            // Show admin options only for users with role ADMIN
+            val isAdmin = TokenManager.getUserRole() == "ADMIN"
+
+            if (isAdmin) {
+                MenuCard(
+                    title = "CRUD de Usuarios",
+                    description = "Gestionar usuarios del departamento (admin)",
+                    icon = Icons.Default.Person,
+                    onClick = onNavigateToUserManagement
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                MenuCard(
+                    title = "Gestión de Sensores",
+                    description = "Registrar y cambiar estado de sensores (tarjetas/llaveros)",
+                    icon = Icons.Default.Sensors,
+                    onClick = onNavigateToSensors
+                )
+            } else {
+                // Operator view
+                MenuCard(
+                    title = "Ver Sensores y Accesos",
+                    description = "Visualizar lista de sensores y historial de accesos",
+                    icon = Icons.Default.Sensors,
+                    onClick = onNavigateToSensors
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
             

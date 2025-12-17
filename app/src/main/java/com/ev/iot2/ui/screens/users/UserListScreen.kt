@@ -65,9 +65,8 @@ fun UserListScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var userToDelete by remember { mutableStateOf<User?>(null) }
     
-    // Load users
+    // Load users (pendiente: implementar llamada a backend)
     LaunchedEffect(Unit) {
-        // TODO: fetch users from backend and assign to users/filteredUsers
         filteredUsers = users
     }
     
@@ -84,7 +83,7 @@ fun UserListScreen(
     }
     
     fun deleteUser(user: User) {
-        // TODO: call backend to delete user
+        // pendiente: llamar al backend para eliminar usuario
         showDeleteDialog = false
         userToDelete = null
     }

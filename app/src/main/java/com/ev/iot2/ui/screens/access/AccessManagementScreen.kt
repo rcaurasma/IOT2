@@ -67,13 +67,15 @@ fun AccessManagementScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(padding)
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(colors = CardDefaults.cardColors()) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text("Control manual de barrera")
+            // Manual barrier control card (styled like other management screens)
+            Card(colors = CardDefaults.cardColors(), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Control manual de barrera", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(onClick = {
@@ -123,7 +125,7 @@ fun AccessManagementScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("Estado barrera: $barrierState")
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text("Enviar evento de acceso")
+                    Text("Enviar evento de acceso", fontWeight = androidx.compose.ui.text.font.FontWeight.Medium)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(value = codigo, onValueChange = { codigo = it }, label = { Text("Código sensor (UID)") }, modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(8.dp))
@@ -156,9 +158,10 @@ fun AccessManagementScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Card(colors = CardDefaults.cardColors()) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text("Ver historial por departamento")
+            // History card
+            Card(colors = CardDefaults.cardColors(), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Ver historial por departamento", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(value = deptIdText, onValueChange = { deptIdText = it }, label = { Text("ID Departamento") }, modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(8.dp))

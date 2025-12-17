@@ -9,33 +9,15 @@ const router = express.Router();
 /**
  * GET /api/iot/data
  *
- * Devuelve datos de ejemplo:
- * {
- *   temperature: 23.5,
- *   humidity: 56.7,
- *   timestamp: "2025-11-20T12:34:56.789Z"
- * }
+ * Devuelve un payload simulado para la parte de IoT (sin temperatura/humedad).
+ * Útil para pruebas de la app que simula el dispositivo.
  */
 router.get('/data', (req, res) => {
-    // Temperatura entre 18 y 30 grados
-    const temperature = (18 + Math.random() * 12).toFixed(1);
-
-    // Humedad entre 30% y 80%
-    const humidity = (30 + Math.random() * 50).toFixed(1);
-
     const payload = {
-        temperature: Number(temperature),
-        humidity: Number(humidity),
-        timestamp: new Date().toLocaleString('es-CL', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        })
+        status: 'IDLE',
+        message: 'Simulación de datos IoT (sin sensores físicos)',
+        timestamp: new Date().toISOString()
     };
-
     return res.json(payload);
 });
 
@@ -77,9 +59,11 @@ router.patch('/sensors/:id/estado', auth, loadCurrentUser, async (req, res) => {
 });
 
 // Simular lectura de sensor / registrar evento de acceso
+// Body opcional: { codigo_sensor, user_id, tipo_evento }
+// tipo_evento puede ser: 'ACCESO_VALIDO','ACCESO_RECHAZADO','APERTURA_MANUAL','CIERRE_MANUAL'
 router.post('/access', async (req, res) => {
     try {
-        const { codigo_sensor, user_id } = req.body;
+        const { codigo_sensor, user_id, tipo_evento } = req.body;
         if (!codigo_sensor) return res.status(400).json({ error: 'Codigo sensor requerido' });
         const sensor = await db('sensores').where({ codigo_sensor }).first();
         if (!sensor) return res.status(404).json({ error: 'Sensor no encontrado' });
@@ -89,13 +73,21 @@ router.post('/access', async (req, res) => {
         else if (sensor.id_usuario) usuario = await db('users').where({ id: sensor.id_usuario }).first();
 
         const now = new Date();
-        // Determinar resultado
-        let resultado = 'PERMITIDO';
-        if (sensor.estado !== 'ACTIVO') resultado = 'DENEGADO';
-        if (usuario && usuario.estado !== 'ACTIVO') resultado = 'DENEGADO';
+        // Si se especifica un tipo de evento manual desde la app, respetarlo
+        const tipo = tipo_evento || 'ACCESO_VALIDO';
 
-        await db('eventos_acceso').insert({ id_sensor: sensor.id_sensor, id_usuario: usuario ? usuario.id : null, tipo_evento: 'ACCESO_VALIDO', fecha_hora: now, resultado });
-        return res.json({ message: 'Evento registrado', resultado });
+        // Determinar resultado por defecto
+        let resultado = 'PERMITIDO';
+        if (tipo === 'APERTURA_MANUAL' || tipo === 'CIERRE_MANUAL') {
+            // acciones manuales por app siempre se registran como PERMITIDO
+            resultado = 'PERMITIDO';
+        } else {
+            if (sensor.estado !== 'ACTIVO') resultado = 'DENEGADO';
+            if (usuario && usuario.estado !== 'ACTIVO') resultado = 'DENEGADO';
+        }
+
+        await db('eventos_acceso').insert({ id_sensor: sensor.id_sensor, id_usuario: usuario ? usuario.id : null, tipo_evento: tipo, fecha_hora: now, resultado });
+        return res.json({ message: 'Evento registrado', resultado, tipo_evento: tipo });
     } catch (e) {
         console.error('Error registering access event', e);
         return res.status(500).json({ error: 'Error interno' });

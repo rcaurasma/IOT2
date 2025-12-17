@@ -20,7 +20,7 @@ data class AccessEventResponse(val message: String, val evento: Map<String, Any>
 data class SensorRequest(
     val codigo_sensor: String,
     val estado: String,
-    val id_departamento: Int,
+    val id_departamento: Int?,
     val tipo: String,
     val id_usuario: Int? = null
 )

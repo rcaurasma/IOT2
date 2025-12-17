@@ -41,7 +41,7 @@ import com.ev.iot2.ui.components.MessageText
 import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
-import android.util.Log
+import org.json.JSONObject
 import androidx.compose.ui.tooling.preview.Preview
 import com.ev.iot2.ui.theme.IOT2Theme
 
@@ -78,33 +78,46 @@ fun LoginScreen(
                     isError = true
                 }
                 else -> {
-                    try {
-                        Log.d("AuthDebug", "Login request -> email=$email")
-                        val resp = ApiClient.authService.login(LoginRequest(email, password))
-                        Log.d("AuthDebug", "Login response raw: $resp")
-                        if (resp.isSuccessful) {
-                            val body = resp.body()
-                            if (body != null && body.success && body.token != null) {
-                                message = "¡Login correcto!"
-                                isError = false
-                                // persist token
-                                TokenManager.saveToken(body.token)
-                                onLoginSuccess(body.token)
+                        try {
+                            val resp = ApiClient.authService.login(LoginRequest(email, password))
+                            if (resp.isSuccessful) {
+                                val body = resp.body()
+                                if (body != null && body.success && body.token != null) {
+                                    message = "¡Login correcto!"
+                                    isError = false
+                                    // persist token
+                                    TokenManager.saveToken(body.token)
+                                    // persist user object for role/id_departamento usage
+                                    val u = body.user
+                                    if (u != null) {
+                                        try {
+                                            val obj = JSONObject()
+                                            obj.put("id", u.id)
+                                            obj.put("name", u.name)
+                                            obj.put("last_name", u.last_name)
+                                            obj.put("email", u.email)
+                                            obj.put("role", u.role ?: "OPERATOR")
+                                            obj.put("id_departamento", u.id_departamento)
+                                            obj.put("estado", u.estado ?: "ACTIVO")
+                                            TokenManager.saveUserJson(obj.toString())
+                                        } catch (e: Exception) {
+                                            // ignore save error
+                                        }
+                                    }
+                                    onLoginSuccess(body.token)
+                                } else {
+                                    message = "Credenciales incorrectas"
+                                    isError = true
+                                }
                             } else {
-                                message = "Credenciales incorrectas"
+                                val err = resp.errorBody()?.string()
+                                message = err ?: "Error en login"
                                 isError = true
                             }
-                        } else {
-                            val err = resp.errorBody()?.string()
-                            Log.d("AuthDebug", "Login response errorBody: $err")
-                            message = err ?: "Error en login"
+                        } catch (e: Exception) {
+                            message = "Error de red: ${e.message}"
                             isError = true
                         }
-                    } catch (e: Exception) {
-                        Log.e("AuthDebug", "Login exception", e)
-                        message = "Error de red: ${e.message}"
-                        isError = true
-                    }
                 }
             }
             isLoading = false
