@@ -41,6 +41,7 @@ import com.ev.iot2.ui.components.MessageText
 import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
+import android.util.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,16 +93,21 @@ fun RegisterScreen(
                     } else {
                         // Call API register
                         try {
+                            Log.d("AuthDebug", "Register request -> name=$name, lastName=$lastName, email=$email")
                             val resp = ApiClient.authService.register(RegisterRequest(name, lastName, email, password))
+                            Log.d("AuthDebug", "Register response raw: $resp")
                             if (resp.isSuccessful) {
                                 message = resp.body()?.message ?: "¡Registro exitoso!"
                                 isError = false
                                 onRegisterSuccess()
                             } else {
-                                message = resp.errorBody()?.string() ?: "Error al registrar usuario"
+                                val err = resp.errorBody()?.string()
+                                Log.d("AuthDebug", "Register response errorBody: $err")
+                                message = err ?: "Error al registrar usuario"
                                 isError = true
                             }
                         } catch (e: Exception) {
+                            Log.e("AuthDebug", "Register exception", e)
                             message = "Error de red: ${e.message}"
                             isError = true
                         }

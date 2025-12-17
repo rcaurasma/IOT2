@@ -41,11 +41,14 @@ import com.ev.iot2.ui.components.MessageText
 import com.ev.iot2.ui.theme.PrimaryBlue
 import com.ev.iot2.utils.Validators
 import kotlinx.coroutines.launch
+import android.util.Log
 import androidx.compose.ui.tooling.preview.Preview
 import com.ev.iot2.ui.theme.IOT2Theme
 
 @Composable
-fun LoginScreen(
+                        Log.d("AuthDebug", "Login request -> email=$email")
+                        val resp = ApiClient.authService.login(LoginRequest(email, password))
+                        Log.d("AuthDebug", "Login response raw: $resp")
     onNavigateToRegister: () -> Unit,
     onNavigateToRecovery: () -> Unit,
     onLoginSuccess: (String?) -> Unit
@@ -59,11 +62,14 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     
     fun validateAndLogin() {
-        scope.launch {
+                            val err = resp.errorBody()?.string()
+                            Log.d("AuthDebug", "Login response errorBody: $err")
+                            message = err ?: "Error en login"
             isLoading = true
             message = ""
             
-            // Validate fields
+                        Log.e("AuthDebug", "Login exception", e)
+                        message = "Error de red: ${e.message}"
             when {
                 email.isBlank() -> {
                     message = "El email no puede estar vacío"
