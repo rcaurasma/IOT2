@@ -38,9 +38,11 @@ sealed class Route(val route: String) {
     object SensorsManagement : Route("sensors_management")
     object Register : Route("register")
     object RecoveryEmail : Route("recovery_email")
-    object RecoveryCode : Route("recovery_code/{email}")
+    object RecoveryCode : Route("recovery_code/{email}/{generatedCode}")
     object RecoveryNewPassword : Route("recovery_new/{email}/{code}")
     object UserManagement : Route("users")
+    object UserList : Route("users/list")
+    object UserForm : Route("users/form/{id}")
     object Developer : Route("developer")
 }
 
@@ -101,15 +103,17 @@ fun AppNavigator() {
         composable(Route.RecoveryEmail.route) {
             com.ev.iot2.ui.screens.recovery.RecoveryEmailScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onCodeSent = { email -> navController.navigate("recovery_code/$email") }
+                onCodeSent = { email, code -> navController.navigate("recovery_code/$email/$code") }
             )
         }
-
-        composable("recovery_code/{email}") { backStackEntry ->
+        composable(Route.RecoveryCode.route) { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
+            val generatedCode = backStackEntry.arguments?.getString("generatedCode") ?: ""
             com.ev.iot2.ui.screens.recovery.RecoveryCodeScreen(
                 email = email,
-                onCodeVerified = { code -> navController.navigate("recovery_new/$email/$code") }
+                generatedCode = generatedCode,
+                onNavigateBack = { navController.popBackStack() },
+                onCodeValid = { navController.navigate("recovery_new/$email/$generatedCode") }
             )
         }
 
@@ -124,11 +128,32 @@ fun AppNavigator() {
         }
 
         composable(Route.UserManagement.route) {
-            com.ev.iot2.ui.screens.users.UserManagementScreen(onBack = { navController.popBackStack() })
+            com.ev.iot2.ui.screens.users.UserManagementScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToUserForm = { navController.navigate(Route.UserForm.route.replace("{id}", "0")) },
+                onNavigateToUserList = { navController.navigate(Route.UserList.route) }
+            )
+        }
+
+        composable(Route.UserList.route) {
+            com.ev.iot2.ui.screens.users.UserListScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onEditUser = { userId -> navController.navigate("users/form/$userId") }
+            )
+        }
+
+        composable(Route.UserForm.route) { backStackEntry ->
+            val idParam = backStackEntry.arguments?.getString("id") ?: "0"
+            val uid = idParam.toLongOrNull()
+            com.ev.iot2.ui.screens.users.UserFormScreen(
+                onNavigateBack = { navController.popBackStack() },
+                userId = if (uid != null && uid > 0) uid else null,
+                onSaveSuccess = { navController.popBackStack() }
+            )
         }
 
         composable(Route.Developer.route) {
-            com.ev.iot2.ui.screens.developer.DeveloperScreen(onBack = { navController.popBackStack() })
+            com.ev.iot2.ui.screens.developer.DeveloperScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }

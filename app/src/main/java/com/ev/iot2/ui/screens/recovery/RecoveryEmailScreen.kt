@@ -46,7 +46,7 @@ import com.ev.iot2.utils.Validators
 @Composable
 fun RecoveryEmailScreen(
     onNavigateBack: () -> Unit,
-    onCodeSent: (String) -> Unit
+    onCodeSent: (String, String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
@@ -74,7 +74,7 @@ fun RecoveryEmailScreen(
                             generatedCode = body?.code ?: ""
                             message = body?.message ?: "Código enviado (simulado)"
                             isError = false
-                            onCodeSent(email)
+                            onCodeSent(email, generatedCode)
                         } else {
                             message = resp.errorBody()?.string() ?: "Error al solicitar código"
                             isError = true
