@@ -46,9 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ev.iot2.ui.theme.IOT2Theme
 
 @Composable
-                        Log.d("AuthDebug", "Login request -> email=$email")
-                        val resp = ApiClient.authService.login(LoginRequest(email, password))
-                        Log.d("AuthDebug", "Login response raw: $resp")
+fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     onNavigateToRecovery: () -> Unit,
     onLoginSuccess: (String?) -> Unit
@@ -60,16 +58,12 @@ import com.ev.iot2.ui.theme.IOT2Theme
     var isLoading by remember { mutableStateOf(false) }
     
     val scope = rememberCoroutineScope()
-    
+
     fun validateAndLogin() {
-                            val err = resp.errorBody()?.string()
-                            Log.d("AuthDebug", "Login response errorBody: $err")
-                            message = err ?: "Error en login"
+        scope.launch {
             isLoading = true
             message = ""
-            
-                        Log.e("AuthDebug", "Login exception", e)
-                        message = "Error de red: ${e.message}"
+
             when {
                 email.isBlank() -> {
                     message = "El email no puede estar vacío"
@@ -85,24 +79,29 @@ import com.ev.iot2.ui.theme.IOT2Theme
                 }
                 else -> {
                     try {
+                        Log.d("AuthDebug", "Login request -> email=$email")
                         val resp = ApiClient.authService.login(LoginRequest(email, password))
+                        Log.d("AuthDebug", "Login response raw: $resp")
                         if (resp.isSuccessful) {
                             val body = resp.body()
                             if (body != null && body.success && body.token != null) {
-                                        message = "¡Login correcto!"
+                                message = "¡Login correcto!"
                                 isError = false
-                                        // persist token
-                                        TokenManager.saveToken(body.token)
-                                        onLoginSuccess(body.token)
+                                // persist token
+                                TokenManager.saveToken(body.token)
+                                onLoginSuccess(body.token)
                             } else {
                                 message = "Credenciales incorrectas"
                                 isError = true
                             }
                         } else {
-                            message = resp.errorBody()?.string() ?: "Error en login"
+                            val err = resp.errorBody()?.string()
+                            Log.d("AuthDebug", "Login response errorBody: $err")
+                            message = err ?: "Error en login"
                             isError = true
                         }
                     } catch (e: Exception) {
+                        Log.e("AuthDebug", "Login exception", e)
                         message = "Error de red: ${e.message}"
                         isError = true
                     }
