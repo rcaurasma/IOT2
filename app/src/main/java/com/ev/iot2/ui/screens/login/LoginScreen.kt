@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ev.iot2.R
 import com.ev.iot2.network.ApiClient
+import com.ev.iot2.network.TokenManager
 import com.ev.iot2.network.LoginRequest
 import com.ev.iot2.ui.components.IoTempButton
 import com.ev.iot2.ui.components.IoTempPasswordField
@@ -82,9 +83,11 @@ fun LoginScreen(
                         if (resp.isSuccessful) {
                             val body = resp.body()
                             if (body != null && body.success && body.token != null) {
-                                message = "¡Login correcto!"
+                                        message = "¡Login correcto!"
                                 isError = false
-                                onLoginSuccess(body.token)
+                                        // persist token
+                                        TokenManager.saveToken(body.token)
+                                        onLoginSuccess(body.token)
                             } else {
                                 message = "Credenciales incorrectas"
                                 isError = true

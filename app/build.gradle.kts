@@ -58,6 +58,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
     // Coroutines for suspend support
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:2.7.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

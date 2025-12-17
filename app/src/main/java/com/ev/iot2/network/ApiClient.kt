@@ -25,4 +25,5 @@ object ApiClient {
         .build()
 
     val authService: AuthService by lazy { retrofit.create(AuthService::class.java) }
+    val iotService: IoTService by lazy { retrofit.create(IoTService::class.java) }
 }
