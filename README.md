@@ -6,7 +6,7 @@ GRANT ALL PRIVILEGES ON iot.* TO 'iot'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 
-server {
+server 
         listen 80 default_server;
         listen [::]:80 default_server;
         root /var/www/html;
@@ -38,3 +38,11 @@ server {
  proxy_cache_bypass $http_upgrade;
  }
 }
+
+node -e "console.log(require('bcryptjs').hashSync('richard',10))"
+node -e "console.log(require('bcryptjs').hashSync('franco',10))"
+node -e "console.log(require('bcryptjs').hashSync('alejandro',10))"
+node -e "console.log(require('bcryptjs').hashSync('jorge',10))"
+
+mysql -u iot -piot -D iot -e "SELECT id, name, last_name, email, id_departamento, role FROM users WHERE email IN ('rcaurasma@gmail.com','franco@gmail.com','alejandro@example.com','jorge@example.com');"
+mysql -u iot -piot -D iot -e "SELECT * FROM departamentos WHERE id_departamento=1;"
