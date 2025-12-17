@@ -17,8 +17,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +49,8 @@ fun RecoveryNewPasswordScreen(
     var message by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(true) }
     
+    val scope = rememberCoroutineScope()
+
     fun validateAndChangePassword() {
         when {
             newPassword.isBlank() -> {
@@ -62,19 +66,21 @@ fun RecoveryNewPasswordScreen(
                     message = "Las contraseñas no coinciden"
                     isError = true
                 } else {
-                    try {
-                        val resp = ApiClient.authService.resetPassword(ResetPasswordRequest(email, code, newPassword))
-                        if (resp.isSuccessful) {
-                            message = resp.body()?.get("message") ?: "Contraseña actualizada correctamente"
-                            isError = false
-                            onPasswordChanged()
-                        } else {
-                            message = resp.errorBody()?.string() ?: "Error al cambiar la contraseña"
+                    scope.launch {
+                        try {
+                            val resp = ApiClient.authService.resetPassword(ResetPasswordRequest(email, code, newPassword))
+                            if (resp.isSuccessful) {
+                                message = resp.body()?.get("message") ?: "Contraseña actualizada correctamente"
+                                isError = false
+                                onPasswordChanged()
+                            } else {
+                                message = resp.errorBody()?.string() ?: "Error al cambiar la contraseña"
+                                isError = true
+                            }
+                        } catch (e: Exception) {
+                            message = "Error de red: ${e.message}"
                             isError = true
                         }
-                    } catch (e: Exception) {
-                        message = "Error de red: ${e.message}"
-                        isError = true
                     }
                 }
             }

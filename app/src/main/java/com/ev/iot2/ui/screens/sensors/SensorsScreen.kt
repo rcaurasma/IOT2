@@ -48,7 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -218,18 +218,17 @@ fun SensorsScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Bulb Control
+            // Bulb Control (use built-in icon instead of missing drawable)
             DeviceControlCard(
                 title = "Ampolleta",
                 isOn = isBulbOn,
                 onToggle = { isBulbOn = !isBulbOn },
                 message = if (isBulbOn) "Ampolleta encendida" else "Ampolleta apagada",
                 icon = {
-                    Image(
-                        painter = painterResource(
-                            id = if (isBulbOn) R.drawable.ic_bulb_on else R.drawable.ic_bulb_off
-                        ),
+                    Icon(
+                        imageVector = Icons.Filled.Lightbulb,
                         contentDescription = "Ampolleta",
+                        tint = if (isBulbOn) WarningOrange else Color.Gray,
                         modifier = Modifier.size(64.dp)
                     )
                 }
