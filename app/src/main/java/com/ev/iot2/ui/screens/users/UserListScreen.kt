@@ -57,7 +57,7 @@ import com.ev.iot2.utils.Validators
 fun UserListScreen(
     // databaseHelper removed; use API in future
     onNavigateBack: () -> Unit,
-    onEditUser: (Long) -> Unit
+    onEditUser: (Int) -> Unit
 ) {
     var users by remember { mutableStateOf<List<User>>(emptyList()) }
     var searchQuery by remember { mutableStateOf("") }

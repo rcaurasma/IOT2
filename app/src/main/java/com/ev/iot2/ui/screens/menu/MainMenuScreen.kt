@@ -161,9 +161,9 @@ fun MainMenuScreen(
                 description = "sistema de control de acceso basado en tecnología RFID y componentes IoT",
                 icon = Icons.Default.Code,
                 onClick = onNavigateToArduino
-            
-            Spacer(modifier = Modifier.height(16.dp))
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             MenuCard(
                 title = "Datos del desarrollador",
